@@ -1,35 +1,30 @@
 'use client';
-import { useEffect, useState } from 'react';
-import ProductList from './ProductListFiltered';
-import CategoryFilter from './CategoryFilter';
-import PriceFilter from './PriceFilter';
-import CartSummary from './CartSummary';
+import { useState, useEffect } from 'react';
+import ProductList from './ProductList';
 import StatusMessage from './StatusMessage';
 
 export default function Catalog() {
   const [products, setProducts] = useState([]);
-  const [filters, setFilters] = useState({ price: '', category: '' });
-  const [cart, setCart] = useState([]);
-  const [status, setStatus] = useState('loading'); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/products')
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         setProducts(data);
-        setStatus(data.length === 0 ? 'empty' : '');
+        setLoading(false);
       })
-      .catch(() => setStatus('error'));
+      .catch(() => setLoading(false));
   }, []);
+
+  if (loading) return <StatusMessage message="Loading products..." />;
+
+  if (products.length === 0) return <StatusMessage message="No products available." />;
 
   return (
     <div>
-      <h2>Mini Storefront</h2>
-      <CategoryFilter filters={filters} setFilters={setFilters} />
-      <PriceFilter filters={filters} setFilters={setFilters} />
-      <ProductList products={products} filters={filters} setCart={setCart} />
-      <CartSummary cart={cart} />
-      {status && <StatusMessage status={status} />}
+      <h2 className="text-lg font-bold mb-2">Catalog</h2>
+      <ProductList products={products} />
     </div>
   );
 }

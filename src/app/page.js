@@ -1,8 +1,11 @@
-export default function Home() {
+import Catalog from './components/Catalog';
+
+export default function Page() {
   return (
-    <main style={{ padding: '2rem', textAlign: 'center' }}>
-      <h1>Mini Storefront </h1>
-      <p> products</p>
+    <main className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Mini Storefront</h1>
+      <Catalog />
     </main>
   );
 }
+
